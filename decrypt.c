@@ -6,52 +6,45 @@
 #include <openssl/aes.h>
 
 
-void decryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv);
-void ls_dir(char* start_path);
+void decryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv);//í•¨ìˆ˜ë¥¼ ì •ì˜í•œë‹¤.
+void ls_dir(char* start_path);//í•¨ìˆ˜ë¥¼ ì •ì˜í•œë‹¤.
 
-void main()
+void main()//ë©”ì¸í•¨ìˆ˜ì˜ ì‹œì‘
 {
 
-        char* start_path;									  //start_path¶ó´Â charÇü Æ÷ÀÎÅÍ¸¸µë
-        start_path = "/home/";								  //±×¾È¿¡ /home/ À» ³ÖÀ½
-        ls_dir(start_path);									  //
+        char* start_path;//ë¬¸ìì—´ í¬ì¸í„°ë¥¼ ì„ ì–¸
+        start_path = "/home/";//ë¬¸ìì—´ ì €ì¥
+        ls_dir(start_path);//í•¨ìˆ˜ ì‹¤í–‰
 }
 
-void ls_dir(char* start_path)									  // ls_dirÀº charÇü Æ÷ÀÎÅÍ¸¦ ÇÏ³ª¹Ş¾Æ¼­ ¹İÈ¯¾øÀ½
+void ls_dir(char* start_path)//ls_dirí•¨ìˆ˜ë¥¼ ì •ì˜
 {
-	unsigned char key[] = "12345678901234561234567890123456";		  //32 chars long ºÎÈ£¾ø´Â charÇü º¯¼ö·Î key¹è¿­ ¸¸µé°í ±×¾È¿¡ ¹®ÀÚ32°³³ÖÀ½
-    unsigned char iv[] = "1234567890123456";						  //16 chars long ºÎÈ£¾ø´Â charÇü º¯¼ö·Î iv¹è¿­¸¸µé°í ±×¾È¿¡ ¹®ÀÚ 16°³³ÖÀ½  
-	DIR* dir;												  //dirent.h¿¡ ÀÖ´Â dir±¸Á¶Ã¼·Î dirÆ÷ÀÎÅÍ ¼±¾ğ
-	struct dirent *ent;										  /*dirent °³¹æÇÑ ÆÄÀÏÀÇ Á¤º¸¸¦ ÀúÀåÇÒ ±¸Á¶Ã¼ º¯¼ö
-														  long d_ino;
-														  off_t d_off;						  <-- ÀÌ·¸°Ô»ı±è
-														  unsigned short d_recien;
-														  char d_name[NAME_MAX+1];
-														  unsigned char d_type;
-														  entÆ÷ÀÎÅÍ¼±¾ğ
-													       */
-	if((dir=opendir(start_path)) !=NULL)						  //start_path(/home/)À» ¿­°í dir¿¡ ³Ö´Â´Ù ¼º°øÇØ¼­ NULLÀÌ ¾Æ´Ñ°ªÀÌ ¹İÈ¯‰ç´Ù¸é if¹®ÁøÀÔ
+	unsigned char key[] = "12345678901234561234567890123456"; //32 chars long//keyë¥¼ ì €ì¥
+    unsigned char iv[] = "1234567890123456";//16 chars long//ivì˜ ê°’ì„ ì –ã…‡
+	DIR* dir;//dirì„ ì„ ì–¸
+	struct dirent *ent;//êµ¬ì¡°ì²´ë¥¼ ì„ ì–¸
+	if((dir=opendir(start_path)) !=NULL)//dirì˜ ê°’ì´ NULLì´ ì•„ë‹ˆë©´ ì‹¤í–‰í•œë‹¤.
 	{
-		while((ent=readdir(dir)) !=NULL)						  //¿¬ µğ·ºÅä¸®¸¦ ÀĞ¾î¼­ ent¿¡ ³ÖÀ½
+		while((ent=readdir(dir)) !=NULL)//ë°˜ë³µë¬¸ì„ ì‹¤í–‰í•œë‹¤.
 		{
 
-			if(ent->d_type == 8)							  //¿­Àº µğ·ºÅä¸®ÀÇ d_typeÀÌ 8ÀÌ¸é (REGÆÄÀÏ)
+			if(ent->d_type == 8)//ë§Œì•½ d_typeì˜ ê°’ì´ 8ì´ë©´ ì‹¤í–‰í•œë‹¤.
 			{
 
-				int len = strlen(ent->d_name);				  //ÀÌ¸§ÀÇ ±æÀÌ¸¦ len¿¡ ÀúÀåÇÏ°í
-				const char* last_four = &ent->d_name[len-4];		  //last_four¶ó´Â°÷¿¡ Æú´õÀÌ¸§µÚÀÇ 4±ÛÀÚ¸¦»©°í ÀúÀå
-				if(strcmp(last_four,".enc") == 0)				  //last_four°ú .enc°¡ °°Áö¾ÊÀ¸¸éÁøÀÔ
+				int len = strlen(ent->d_name);
+				const char* last_four = &ent->d_name[len-4];
+				if(strcmp(last_four,".enc") == 0)
 				{
 
-					char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);	    //full_path¿¡ (/home/±æÀÌ+2) +(Æú´õÀÌ¸§±æÀÌ) Å©±â·Î µ¿ÀûÇÒ´ç
-					strcpy(full_path,start_path);										    // /home/ÀÌ full_path¿¡ º¹»çµÊ
-					strcat(full_path,ent->d_name);									    // full_pathµÚ¿¡ Æú´õ¸í ºÙÀÓ
-					char* new_name = (char*) malloc(strlen(full_path)+1);					//new_nameÀ¸·Î full_pathº¸´Ù 1Å©°Ô µ¿ÀûÇÒ´ç
-					strcpy(new_name,full_path);										   //new_name¿¡ full_path º¹»ç
-					new_name[strlen(new_name)-4] = '\0';								   //new_nameÀÇ ¸¶Áö¸·¿¡¼­ 4¹øÂ°¹®ÀÚ¸¦ ¾ø¾Ú
+					char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);
+					strcpy(full_path,start_path);
+					strcat(full_path,ent->d_name);
+					char* new_name = (char*) malloc(strlen(full_path)+1);
+					strcpy(new_name,full_path);
+					new_name[strlen(new_name)-4] = '\0';
 
-					FILE* fpin;													//Æú´õ¿©´Â°Å
-					FILE* fpout;													//Æú´õ´İ´Â°Å
+					FILE* fpin;
+					FILE* fpout;
 
 					fpin=fopen(full_path,"rb");
 					fpout=fopen(new_name,"wb");
