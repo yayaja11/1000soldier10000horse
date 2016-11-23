@@ -6,29 +6,29 @@
 #include <openssl/aes.h>
 
 
-void decryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv);//함수를 정의한다.
-void ls_dir(char* start_path);//함수를 정의한다.
+void decryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv);
+void ls_dir(char* start_path);
 
-void main()//메인함수의 시작
+void main()
 {
 
-        char* start_path;//문자열 포인터를 선언
-        start_path = "/home/";//문자열 저장
-        ls_dir(start_path);//함수 실행
+        char* start_path;
+        start_path = "/home/";
+        ls_dir(start_path);
 }
 
-void ls_dir(char* start_path)//ls_dir함수를 정의
+void ls_dir(char* start_path)
 {
-	unsigned char key[] = "12345678901234561234567890123456"; //32 chars long//key를 저장
-    unsigned char iv[] = "1234567890123456";//16 chars long//iv의 값을 젖ㅇ
-	DIR* dir;//dir을 선언
-	struct dirent *ent;//구조체를 선언
-	if((dir=opendir(start_path)) !=NULL)//dir의 값이 NULL이 아니면 실행한다.
+	unsigned char key[] = "12345678901234561234567890123456"; //32 chars long
+    unsigned char iv[] = "1234567890123456";//16 chars long
+	DIR* dir;
+	struct dirent *ent;
+	if((dir=opendir(start_path)) !=NULL)
 	{
-		while((ent=readdir(dir)) !=NULL)//반복문을 실행한다.
+		while((ent=readdir(dir)) !=NULL)
 		{
 
-			if(ent->d_type == 8)//만약 d_type의 값이 8이면 실행한다.
+			if(ent->d_type == 8)
 			{
 
 				int len = strlen(ent->d_name);
