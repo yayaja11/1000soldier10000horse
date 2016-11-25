@@ -2,6 +2,7 @@
 - 11월 08일까지 ‘[단계2] 주제 선정 및 계획’에 해당하는, 각자 원하는 주제 조사 후 의견 교환
 2차 회의: 2016.11.13.
 3차 회의: 2016.11.16.	주제 최종 선정 및 초기 분석
+예정) 4차 회의: 2016.11.20.	[단계 3]과 [단계 4] 진행 예정 + 이소나) 교수님과 면담 일정
 
 
 
@@ -12,6 +13,13 @@
 발표일자: 12월 05일 (수) 13번째
 
 
+
 [단계2] 주제 선정 및 계획
 11월 08일 카카오톡 의견 교환 내용을 토대로 회의 진행
 팀원 공통 의견: C 언어 사용, 전공과 관련된 프로젝트랜섬웨어, 모바일 원격 제어, 게임, 데스크탑 원격 제어, 아이폰탈옥, 키로거-> 4 개로 축약키로거		https://github.com/ciakpey/keyloger모바일원격제어	https://github.com/akira-cn/remote랜섬웨어		https://github.com/alextspy/Ransomware아이폰탈옥		https://github.com/winocm/opensn0w
+
+-> 최종 결정
+강신혁: 950309tlsgur
+이양재: dlthsk99이소나: ssonalee
+주수영: SuyoungJuGitHub - https://github.com/yayaja11/1000soldier10000horse/invitations랜섬웨어 Fork: https://github.com/alextspy/Ransomware[단계3] 분석
+C언어, LINUX 환경에서만 동작암호화와 복호화 코딩 유사AES_256_cbc 사용[단계4] Enhancement Proposal 및 디스커션1. 기존의 암호화 방식 AES_256_cbc	-> 암호화 방식 변경
