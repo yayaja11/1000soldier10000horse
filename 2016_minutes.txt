@@ -1,26 +1,40 @@
-1차 회의: 2016.11.07.
+﻿1차 회의: 2016.11.07.
 - 11월 08일까지 ‘[단계2] 주제 선정 및 계획’에 해당하는, 각자 원하는 주제 조사 후 의견 교환
-2차 회의: 2016.11.13.
+2차 회의: 2016.11.13.	
 3차 회의: 2016.11.16.	주제 최종 선정 및 초기 분석
 4차 회의: 2016.11.20.	[단계 3]과 [단계 4] 진행 예정 + (이소나) 교수님과 면담 일정
-- 교수님과 면담 일자: 2016.11.20 수업 후 진행- 면담시, 질문 목록 WIKI에 올리기
+- 교수님과 면담 일자: 2016.11.20 수업 후 진행
+- 면담시, 질문 목록 WIKI에 올리기
 
 - 11월 21일자 질문 목록
 
 강신혁
+Wiki를 이용하는 것도 교수님이 말씀하신 소통의 방벙중에 하나인지?
 
 이소나
+github를 이용한 발표방식이 어떻게 진행되어져야 하는지?
 
 이양재
+랜섬웨어로 암호화하면 오히려 분석하기 쉬워지는 프로그램이 있는지?
 
 주수영
+평가항목 중, 옵션을 구현했을 때와 하지 않았을 때의 점수 차이가 나는지?
+
 
 - 11월 21일자 질의 응답 내용
-1. 선택 사유 ->	2. 발표 방식 ->3. 옵션[구현]을 했을 때와 하지 않았을 때의 차이 -> 있음. 평가서 ‘실현부분(20점)’에 해당
+
+1. 선택 사유
+ -> 랜섬웨어에 관한 범죄가 증가함에 따라 그에 대한 분석 능력 증가도 요구
+따라서 이 오픈소스를 통하여 랜섬웨어 소스를 분석하고자 하는 사람들에게 유용하게 Tool을 만들고자 함
+암호화 방식이 아닌 분석에 더욱 유용하게 하고자 랜섬웨어를 선택	
+2. 발표 방식
+ ->Wiki Page를 이용한 발표. 페이지 내부에 여태까지 진행한 과정들을 보여주어 시각화
+3. 옵션[구현]을 했을 때와 하지 않았을 때의 차이
+ -> 있음. 평가서 ‘실현부분(20점)’에 해당
 
 5차 회의: 2016.11.21.	11월 21일 수업 후 교수님과 면담 예정
 6차 회의: 2016.11.23.
-예정)7차 회의: 2016.11.25
+7차 회의: 2016.11.25
 
 
 
@@ -33,15 +47,60 @@
 
 [단계2] 주제 선정 및 계획
 11월 08일 카카오톡 의견 교환 내용을 토대로 회의 진행
-팀원 공통 의견: C 언어 사용, 전공과 관련된 프로젝트랜섬웨어, 모바일 원격 제어, 게임, 데스크탑 원격 제어, 아이폰탈옥, 키로거-> 4 개로 축약키로거		https://github.com/ciakpey/keyloger모바일원격제어	https://github.com/akira-cn/remote랜섬웨어		https://github.com/alextspy/Ransomware아이폰탈옥		https://github.com/winocm/opensn0w
+ 팀원 공통 의견: C 언어 사용, 전공과 관련된 프로젝트 랜섬웨어, 모바일 원격 제어, 게임, 데스크탑 원격 제어, 아이폰탈옥, 키로거
 
+-> 4 개로 축약
+키로거		https://github.com/ciakpey/keyloger
+모바일원격제어	https://github.com/akira-cn/remote
+랜섬웨어	https://github.com/alextspy/Ransomware
+아이폰탈옥	https://github.com/winocm/opensn0w
 -> 최종 결정
+
+
 강신혁: 950309tlsgur
-이양재: dlthsk99이소나: ssonalee
-주수영: SuyoungJuGitHub - https://github.com/yayaja11/1000soldier10000horse/invitations랜섬웨어 Fork: https://github.com/alextspy/Ransomware[단계3] 분석
-C언어, LINUX 환경에서만 동작암호화와 복호화 코딩 유사AES_256_cbc 사용[단계4] Enhancement Proposal 및 디스커션1. 기존의 암호화 방식 AES_256_cbc	-> 암호화 방식 변경
-2. Readme.txt 파일이 없음 	-> Readme.txt 파일 추가3. 암호화된 모든 파일에 내용이 없음	-> 암호화된 모든 파일에 암호화되었다는 등의 내용 추가4. 랜섬웨어 복호화할 때 Ransomware_info 파일이 사라지지 않음	-> 복호화할 때, Ransomware_info 파일 삭제
-5. ‘/home/’ 전체가 아닌 일부분만 암호화가 될 수 있도록 함 -> 경로: ‘/Desktop/ransomware/ransomware_test/‘
- -> 이유:
+이양재: yayaja11
+이소나: ssonalee
+주수영: SuyoungJu  GitHub
+ - https://github.com/yayaja11/1000soldier10000horse/invitations
+랜섬웨어 Fork: https://github.com/alextspy/Ransomware
+[단계3] 분석
+
+C언어, LINUX 환경에서만 동작
+암호화와 복호화 코딩 유사 AES_256_cbc 사용
+Openssl 헤더파일내 필요한 함수 분석 
+*참조 https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898/include/openssl/evp.h
+
+https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898/include/openssl/aes.h
+
+
+[단계4] Enhancement Proposal 및 디스커션
+
+1. 기존의 암호화 방식 AES_256_cbc
+	-> 암호화 방식 변경
+2. Readme.txt 파일이 없음
+ 	-> Readme.txt 파일 추가
+3. 암호화된 모든 파일에 내용이 없음
+	-> 암호화된 모든 파일에 암호화되었다는 등의 내용 추가
+4. 랜섬웨어 복호화할 때 Ransomware_info 파일이 사라지지 않음
+	-> 복호화할 때, Ransomware_info 파일 삭제
+5. ‘/home/’ 전체가 아닌 일부분만 암호화가 될 수 있도록 함
+ -> 경로: ‘~/Desktop/ransomware/ransomware_test/‘
+ -> 이유:  랜섬웨어를 처음 분석하고자 하는 사용자들이 랜섬웨어 파일을 클릭했을 때, 
+           home에 있는 모든 파일이 암호화되어 복호화를 실행 못할 우려가 있음
+           이를 방지하고자 경로를 바꿔 분석에 용이하게 하고자 함
+	   
+
+6. Commit 방식 통일
+ -> git commit -sm “[파일명] 수정내용”
+
+[단계5] 변경사항 
+
+1.불필요하게 폴더마다 생성되던 Ramsonware_info 파일 최상위 디렉토리에만 
+생성
+
+2. 분석작업 능률 향상을 위하여 전체 폴더를 대상으로 하던 encrypt파일을
+특정 폴더만 암호화하도록 재설정
+
+3. 가이드를 제시해 시간을 단축하기 위해 초기 랜섬웨어 실행 시 필요한 가이드북(ReadMe.txt) 생성
 
 * 2016.11.00 * 1차 제안서 작성
