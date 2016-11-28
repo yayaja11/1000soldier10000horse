@@ -9,26 +9,33 @@
 - 11월 21일자 질문 목록
 
 강신혁
+1. wiki에서 얘기하는것도 교수님이 말씀하신 소통의 방법중에 하나인지? (저는 커밋을 사용해서 계속적으로 수정하면서 수정사항으로 얘기하는걸줄 알았어요!)
+2. 발표에는 어떤것을 발표해야 하는지, 어떤식의 발표가 되어야하는지? (깃허브를 활용해서 어떤식의 소통을 했는지를 발표하는건가 아니면 저희가 오픈소스를 가지고 어떻게 개발하거나 분석했는지를 발표하는것인지?)
+3. git으로 과제한거처럼 명령창에서 소통은 불가능한가?
+4. 어떻게 여기 페이지에서 Commit 할 수 있는지?
 
-이소나
+이소나 - 발표 방식
 
-이양재
-랜섬웨어로 암호화하면 오히려 분석하기 쉬워지는 프로그램이 있는지?
-주수영
+이양재 - 랜섬웨어로 암호화하면 오히려 분석하기 쉬워지는 프로그램이 있는지?
+
+주수영 - 옵션[구현]을 했을 때와 하지 않았을 때 차이가 있는지?
+
 
 - 11월 21일자 질의 응답 내용
 
 1. 선택 사유
- ->	
+ -> 랜섬웨어에 관한 범죄가 증가함에 따라 그에 대한 분석 능력 증가도 요구
+따라서 이 오픈소스를 통하여 랜섬웨어 소스를 분석하고자 하는 사람들에게 유용하게 Tool을 만들고자 함
+암호화 방식이 아닌 분석에 더욱 유용하게 하고자 랜섬웨어를 선택
 2. 발표 방식
- ->
+ -> Wiki Page를 이용한 발표. 페이지 내부에 여태까지 진행한 과정들을 캡쳐한 이미지와 글을 올려 시각화
 3. 옵션[구현]을 했을 때와 하지 않았을 때의 차이
  -> 있음. 평가서 ‘실현부분(20점)’에 해당
 
 5차 회의: 2016.11.21.	11월 21일 수업 후 교수님과 면담 예정
 6차 회의: 2016.11.23.
-7차 회의: 2016.11.25
-
+7차 회의: 2016.11.25.
+예정) 8차 회의: 2016.11.28.
 
 
 
@@ -47,23 +54,30 @@
 모바일원격제어	https://github.com/akira-cn/remote
 랜섬웨어	https://github.com/alextspy/Ransomware
 아이폰탈옥	https://github.com/winocm/opensn0w
+
 -> 최종 결정
-
-
 강신혁: 950309tlsgur
 이양재: yayaja11
 이소나: ssonalee
-주수영: SuyoungJu  GitHub
+주수영: SuyoungJu
+GitHub
  - https://github.com/yayaja11/1000soldier10000horse/invitations
-랜섬웨어 Fork: https://github.com/alextspy/Ransomware
+Ransomware Fork: https://github.com/alextspy/Ransomware
+
+
+
 [단계3] 분석
 
 C언어, LINUX 환경에서만 동작
 암호화와 복호화 코딩 유사 AES_256_cbc 사용
 Openssl 헤더파일내 필요한 함수 분석 
-*참조 https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898/include/openssl/evp.h
-
+*참조
+https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898/include/openssl/evp.h
 https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898/include/openssl/aes.h
+
+encrypt.c , decrypt.c 코드 분석
+encrypt.c, decrypt.c 컴파일 실패, 실패 원인 분석
+
 
 
 [단계4] Enhancement Proposal 및 디스커션
@@ -78,19 +92,18 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 	-> 복호화할 때, Ransomware_info 파일 삭제
 5. ‘/home/’ 전체가 아닌 일부분만 암호화가 될 수 있도록 함
  -> 경로: ‘/Desktop/ransomware/ransomware_test/‘
- -> 이유:
-
+ -> 이유:랜섬웨어를 처음 분석하고자 하는 사용자들이 랜섬웨어 파일을 클릭했을 때,
+home에 있는 모든 파일이 암호화되어 복호화를 실행 못할 우려가 있음
+이를 방지하고자 경로를 바꿔 분석에 용이하게 하고자 함
 6. Commit 방식 통일
  -> git commit -sm “[파일명] 수정내용”
 
 [단계5] 변경사항 
 
-1.불필요하게 폴더마다 생성되던 Ramsonware_info 파일 최상위 디렉토리에만 
-생성
+1.불필요하게 폴더마다 생성되던 Ramsonware_info 파일 최상위 디렉토리에만 생성
 
-2. 분석작업 능률 향상을 위하여 전체 폴더를 대상으로 하던 encrypt파일을
-특정 폴더만 암호화하도록 재설정
+2. 분석작업 능률 향상을 위하여 전체 폴더를 대상으로 하던 encrypt파일을 특정 폴더만 암호화하도록 재설정
 
 3. 가이드를 제시해 시간을 단축하기 위해 초기 랜섬웨어 실행 시 필요한 가이드북(ReadMe.txt) 생성
 
-* 2016.11.00 * 1차 제안서 작성
+* 2016.11.23 * 1차 제안서 작성
