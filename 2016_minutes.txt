@@ -11,6 +11,12 @@
 6차 회의: 2016.11.23.
 7차 회의: 2016.11.25.
 8차 회의: 2016.11.28.
+	- 발표 준비: 이소나_발표자
+	- 발표(시연) 영상 준비: 이양재
+	- WIKI 정리 및 영상 yutube: 강신혁
+	- 코딩 마무리: 주수영
+9차 회의: 2016.11.29.
+	- 최종 회의
 
 
 
@@ -57,13 +63,13 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 [단계4] Enhancement Proposal 및 디스커션
 
 1. 기존의 암호화 방식 AES_256_cbc
-	-> 암호화 방식 변경
-2. Readme.md 파일명 및 내용 수정
-	-> 파일명 수정: How_to_encrypt_and_decrypt.txt
+ -> 암호화 방식 변경
+2. How_to_encrypt_and_decrypt.txt 파일 추가
+ -> readme.md는 원본 설명, How_to_encrypt_and_decrypt.txt는 천군만마 설명
 3. 암호화된 모든 파일에 내용이 없음
-	-> 암호화된 모든 파일에 암호화되었다는 등의 내용 추가
+ -> 암호화된 모든 파일에 암호화되었다는 등의 내용 추가
 4. 랜섬웨어 복호화할 때 Ransomware_info 파일이 사라지지 않음
-	-> 복호화할 때, Ransomware_info 파일 삭제
+ -> 복호화할 때, Ransomware_info 파일 삭제
 5. ‘/home/’ 전체가 아닌 일부분만 암호화가 될 수 있도록 함
  -> 경로: ‘/Home/(UserID)/Desktop/ransomware/‘
  -> 이유:랜섬웨어를 처음 분석하고자 하는 사용자들이 랜섬웨어 파일을 클릭했을 때, home에 있는 모든 파일이 암호화되어 복호화를 실행 못할 우려가 있음
@@ -79,6 +85,7 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 9. 해당파일은 그대로 놔두고 암호화된 파일을 새로생성
 
 
+
 [단계5] (Being Contributor) -> Option제안서: 새로운 기능 구현을 위함2016.11.23. 1차 제안서
 2016.11.25. 2차 제안서
 
@@ -86,8 +93,8 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 
 [단계4]의 2번, 4번, 5번, 7번 구현.
 
-2. Readme.md 파일명 및 내용 수정
- -> 파일명 수정: How_to_encrypt_and_decrypt.txt
+2. How_to_encrypt_and_decrypt.txt 파일 추가
+ —> readme.md는 원본 설명, How_to_encrypt_and_decrypt.txt는 천군만마 설명
 --- 특정한 파일만 암호화됨을 안내
 --- 경로 설명
 --- 경로를 변경할 수 있음을 안내
@@ -117,6 +124,33 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
  -> RANSOMWARE_INFO.txt 내용 수정
 --- Encrypt 현황 설명
 --- Decrypt 방법
+
+
+
+[단계 6] 정리 및 발표 준비
+
+발표 구성
+
+1. 발표 자료 준비
+	WIKI_2017.12.07
+2. 시연 영상 준비
+3. WIKI 정리
+	WIKI_최종 발표 페이지
+	WIKI_회의록
+	WIKI_분석
+	WIKI_질문
+	WIKI_How to Encrypt and Decrypt
+	WIKI_천군만마 Encrypt.c
+	WIKI_천군만마 Decrypt.c
+	WIKI_시연 영상
+	WIKI_그 외 토론 과정
+4. 코딩 정리
+	encrypt.c
+	decrypt.c
+
+최종 마무리 - github 다듬기
+
+URL: https://github.com/yayaja11/1000soldier10000horse/graphs/contributors
 
 
 
