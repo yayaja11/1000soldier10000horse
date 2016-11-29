@@ -11,6 +11,14 @@
 6차 회의: 2016.11.23.
 7차 회의: 2016.11.25.
 8차 회의: 2016.11.28.
+	- 발표 준비: 이소나_발표자
+	- 발표(시연) 영상 준비: 이양재
+	- WIKI 정리 및 영상 yutube: 강신혁
+	- 코딩 마무리: 주수영
+9차 회의: 2016.11.29.
+	- 최종 회의
+
+
 
 
 
@@ -57,16 +65,18 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 [단계4] Enhancement Proposal 및 디스커션
 
 1. 기존의 암호화 방식 AES_256_cbc
-	-> 암호화 방식 변경
-2. Readme.md 파일명 및 내용 수정
-	-> 파일명 수정: How_to_encrypt_and_decrypt.txt
+ -> 암호화 방식 변경
+2. How_to_encrypt_and_decrypt.txt 파일 추가
+ -> readme.md는 원본 설명, How_to_encrypt_and_decrypt.txt는 천군만마 설명
 3. 암호화된 모든 파일에 내용이 없음
-	-> 암호화된 모든 파일에 암호화되었다는 등의 내용 추가
+ -> 암호화된 모든 파일에 암호화되었다는 등의 내용 추가
 4. 랜섬웨어 복호화할 때 Ransomware_info 파일이 사라지지 않음
-	-> 복호화할 때, Ransomware_info 파일 삭제
+ -> 복호화할 때, Ransomware_info 파일 삭제
 5. ‘/home/’ 전체가 아닌 일부분만 암호화가 될 수 있도록 함
  -> 경로: ‘/Home/(UserID)/Desktop/ransomware/‘
- -> 이유:랜섬웨어를 처음 분석하고자 하는 사용자들이 랜섬웨어 파일을 클릭했을 때, home에 있는 모든 파일이 암호화되어 복호화를 실행 못할 우려가 있음
+ -> 복호화도 암호화된 파일만 복호화하도록 수정 - 복호화의 경로도 함께 수정
+ -> 이유:랜섬웨어를 처음 분석하고자 하는 사용자들이 랜섬웨어 파일을 클릭했을 때,
+	home에 있는 모든 파일이 암호화되어 복호화를 실행 못할 우려가 있음
 	이를 방지하고자 경로를 바꿔 분석에 용이하게 하고자 함
 6. Commit 방식 통일
  -> git commit -sm “[파일명] Add or Modify 수정내용”
@@ -79,6 +89,7 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 9. 해당파일은 그대로 놔두고 암호화된 파일을 새로생성
 
 
+
 [단계5] (Being Contributor) -> Option제안서: 새로운 기능 구현을 위함2016.11.23. 1차 제안서
 2016.11.25. 2차 제안서
 
@@ -86,8 +97,8 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 
 [단계4]의 2번, 4번, 5번, 7번 구현.
 
-2. Readme.md 파일명 및 내용 수정
- -> 파일명 수정: How_to_encrypt_and_decrypt.txt
+2. How_to_encrypt_and_decrypt.txt 파일 추가
+ —> readme.md는 원본 설명, How_to_encrypt_and_decrypt.txt는 천군만마 설명
 --- 특정한 파일만 암호화됨을 안내
 --- 경로 설명
 --- 경로를 변경할 수 있음을 안내
@@ -100,16 +111,16 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 4. 랜섬웨어 복호화할 때 Ransomware_info 파일이 사라지지 않음
  -> 복호화할 때, Ransomware_info 파일 삭제
 
- -> 복호화 부분의 (일부에 해당되는) 경로는 수정하지 않음
---- 예외 상황이 발생될 것을 우려함
-
 5. ‘/home/’ 전체가 아닌 일부분만 암호화가 될 수 있도록 함
  -> 경로: ‘/Home/(UserID)/Desktop/ransomware/‘
+ -> 복호화도 암호화된 파일만 복호화하도록 수정 - 복호화의 경로도 함께 수정
  -> 예시를 위해, 경로에 해당되는 디렉토리 및 파일들 제공
 --- 텍스트 파일: .txt
 --- 이미지 파일: .jpg or .jpeg
 --- MSOffice 파일: .docs, .xlsx, .pptx
 --- 압축 파일: .zip
+--- 디렉토리: test
+--- 디렉토리 test 내부: 1.txt
 
 7. Ramsomware_info 파일 최상위 디렉토리에만 생성
  -> 폴더마다 생성되는 것이 불필요하다고 생각됨
@@ -120,6 +131,34 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 
 
 
+[단계 6] 정리 및 발표 준비
+
+발표 구성
+
+1. 발표 자료 준비
+	WIKI_2017.12.07
+2. 시연 영상 준비
+3. WIKI 정리
+	WIKI_최종 발표 페이지
+	WIKI_회의록
+	WIKI_분석
+	WIKI_질문
+	WIKI_How to Encrypt and Decrypt
+	WIKI_천군만마 Encrypt.c
+	WIKI_천군만마 Decrypt.c
+	WIKI_시연 영상
+	WIKI_그 외 토론 과정
+4. 코딩 정리
+	encrypt.c
+	decrypt.c
+
+최종 마무리 - github 다듬기
+
+URL: https://github.com/yayaja11/1000soldier10000horse/graphs/contributors
+시연영상: https://youtu.be/DYwdpi49lpQ
+
+
+
 
 
 (bottom)
@@ -127,7 +166,7 @@ https://github.com/openssl/openssl/blob/6f0ac0e2f27d9240516edb9a23b7863e7ad02898
 - 11월 21일자 질문 목록
 
 강신혁
-1. wiki에서 얘기하는것도 교수님이 말씀하신 소통의 방법중에 하나인지?
+1. wikㅋ에서 얘기하는것도 교수님이 말씀하신 소통의 방법중에 하나인지?
 (저는 커밋을 사용해서 계속적으로 수정하면서 수정사항으로 얘기하는걸줄 알았어요!)
 2. 발표에는 어떤것을 발표해야 하는지, 어떤식의 발표가 되어야하는지?
 (깃허브를 활용해서 어떤식의 소통을 했는지를 발표하는건가 아니면 저희가 오픈소스를 가지고 어떻게 개발하거나 분석했는지를 발표하는것인지?)
