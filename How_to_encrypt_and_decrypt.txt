@@ -1,7 +1,9 @@
-이 프로그램은 랜섬웨어를 분석하기 위한 환경을 구축한 프로그램으로 실행시, 해당폴더의 ~/Desktop/ransomware디렉토리의 내용이 모두 암호화 됩니다. 
+이 프로그램은 랜섬웨어를 분석하기 위한 환경을 구축한 프로그램으로 실행시, 해당폴더의 ~/Desktop/ransomware 디렉토리의 내용이 모두 암호화 됩니다. 
 복호화 시 decrypt.c 파일을 사용하세요
 
 실행하기 위해 다운받아야 할 파일들 링크 - https://github.com/yayaja11/1000soldier10000horse
+
+
 
 <실행방법>
 
@@ -11,9 +13,7 @@ openssh헤더파일의 오류를 잡기위해 아래 명령어를 입력해줍시다.
 -> <sudo apt-get install libssl-dev>
 
 **주의**
-
 ->/home/(your id)/Desktop/ 경로로 이동하여 clone한 저장소 내에 있는 "ransomware" 폴더를 복사, 붙여넣기 해주셔야 동작이 가능합니다!!!!
-
 
 
 위에 입력된 링크를 통해 fork 후 저장소를 clone합니다.
@@ -27,10 +27,12 @@ LINUX 실행 명령어
 encrypt 파일이 생성된 폴더에서 chmod a+x encrypt 입력합니다.
 
 명령어 ./encrypt를 입력하여 암호화를 실행시킨 후 파일의 암호화를 확인합니다.
-
 명령어 ./decrypt를 입력하여 복호화를 실행시킨 후, 파일의 복호화를 확인합니다.
 
+
+
 <해당 랜섬웨어에 사용된 AES_256 알고리즘의 간단한 설명>
+
 ->랜섬웨어란 보안목적의 암호알고리즘을 전혀 다른 기능으로 이용해 상대방이 가지고 있는 파일을 확일할 수 없도록 암호화시켜버리고 금전적 지불을 유도하는 프로그램입니다.
 
 랜섬웨어의 공격 흐름 감염 - > 파일검색 - > 암호화 - > 파일이동 - > 메시지 출력 - > 협상
@@ -43,6 +45,12 @@ encrypt 파일이 생성된 폴더에서 chmod a+x encrypt 입력합니다.
 
 해당 랜섬웨어는 고정키 암호화를 사용하였습니다.
 
-유튜브 영상 https://www.youtube.com/watch?v=vU5FG_M30x8
 
-출처 https://github.com/alextspy/Ransomware
+
+
+
+천군만마	https://github.com/yayaja11/1000soldier10000horse
+유튜브 천군만마 영상	https://youtu.be/DYwdpi49lpQ
+
+원본 출처	https://github.com/alextspy/Ransomware
+유튜브 원본 영상	https://www.youtube.com/watch?v=vU5FG_M30x8
